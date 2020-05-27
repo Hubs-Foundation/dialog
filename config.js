@@ -10,7 +10,7 @@
 
 const os = require('os');
 
-module.exports =
+const config =
 {
 	// Listening hostname (just for `gulp live` task).
 	domain : process.env.DOMAIN || 'localhost',
@@ -31,7 +31,7 @@ module.exports =
 	mediasoup :
 	{
 		// Number of mediasoup workers to launch.
-		numWorkers : Object.keys(os.cpus()).length,
+		numWorkers     : Object.keys(os.cpus()).length,
 		// mediasoup WorkerSettings.
 		// See https://mediasoup.org/documentation/v3/mediasoup/api/#WorkerSettings
 		workerSettings :
@@ -120,8 +120,7 @@ module.exports =
 			listenIps :
 			[
 				{
-					ip          : process.env.MEDIASOUP_LISTEN_IP || '1.2.3.4',
-					announcedIp : process.env.MEDIASOUP_ANNOUNCED_IP
+					ip : process.env.MEDIASOUP_LISTEN_IP
 				}
 			],
 			initialAvailableOutgoingBitrate : 1000000,
@@ -129,18 +128,17 @@ module.exports =
 			maxSctpMessageSize              : 262144,
 			// Additional options that are not part of WebRtcTransportOptions.
 			maxIncomingBitrate              : 1500000
-		},
-		// mediasoup PlainTransport options for legacy RTP endpoints (FFmpeg,
-		// GStreamer).
-		// See https://mediasoup.org/documentation/v3/mediasoup/api/#PlainTransportOptions
-		plainTransportOptions :
-		{
-			listenIp :
-			{
-				ip          : process.env.MEDIASOUP_LISTEN_IP || '1.2.3.4',
-				announcedIp : process.env.MEDIASOUP_ANNOUNCED_IP
-			},
-			maxSctpMessageSize : 262144
 		}
 	}
 };
+
+if (process.env.MEDIASOUP_ANNOUNCED_IP) 
+{
+	// For now we have to bind to 0.0.0.0 to ensure TURN and non-TURN connectivity.
+	config.mediasoup.webRtcTransportOptions.listenIps.push({
+		ip          : '0.0.0.0',
+		announcedIp : process.env.MEDIASOUP_ANNOUNCED_IP
+	});
+}
+
+module.exports = config;
