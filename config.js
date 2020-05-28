@@ -121,6 +121,10 @@ const config =
 			[
 				{
 					ip : process.env.MEDIASOUP_LISTEN_IP
+				},
+				{
+					ip          : '0.0.0.0',
+					announcedIp : process.env.MEDIASOUP_ANNOUNCED_IP
 				}
 			],
 			initialAvailableOutgoingBitrate : 1000000,
