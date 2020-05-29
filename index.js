@@ -321,6 +321,23 @@ async function createExpressApp()
 		});
 
 	/**
+	 * Temporary deprecated API to emulate Janus endpoint to get CCU by reticulum.
+	 */
+	expressApp.post(
+		'/admin', (req, res) =>
+		{
+			const sessions = [];
+
+			for (const room in rooms.values()) {
+				for (let i = 0; i < room.getCCU(); i++) {
+					sessions.push({});
+				}
+			}
+
+			res.status(200).json({ sessions });
+		});
+
+	/**
 	 * Error handler.
 	 */
 	expressApp.use(
