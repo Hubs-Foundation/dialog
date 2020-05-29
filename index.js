@@ -25,6 +25,8 @@ const Logger = require('./lib/Logger');
 const Room = require('./lib/Room');
 const interactiveServer = require('./lib/interactiveServer');
 const interactiveClient = require('./lib/interactiveClient');
+const util = require('util');
+const readFile = util.promisify(fs.readFile);
 
 const logger = new Logger();
 const queue = new AwaitQueue();
@@ -36,6 +38,8 @@ let protooWebSocketServer;
 
 const mediasoupWorkers = [];
 let nextMediasoupWorkerIdx = 0;
+
+let authKey;
 
 run();
 
@@ -49,7 +53,13 @@ async function run()
 	await runMediasoupWorkers();
 	await createExpressApp();
 	await runHttpsServer();
+	try {
+		authKey = await readFile(config.authKey, 'utf8');
+	} catch (error) {
+		logger.error("authKey not set; jwt verification will not work.", error);
+	}
 	await runProtooWebSocketServer();
+
 
 	// Log rooms status every X seconds.
 	setInterval(() =>
@@ -418,7 +428,7 @@ async function getOrCreateRoom({ roomId })
 
 		const mediasoupWorker = getMediasoupWorker();
 
-		room = await Room.create({ mediasoupWorker, roomId });
+		room = await Room.create({ mediasoupWorker, roomId, authKey });
 
 		rooms.set(roomId, room);
 		room.on('close', () => rooms.delete(roomId));
