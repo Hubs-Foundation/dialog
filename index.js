@@ -306,6 +306,21 @@ async function createExpressApp()
 		});
 
 	/**
+	 * Meta API to be able to grab current CCU count for load balancing.
+	 */
+	expressApp.get(
+		'/meta', (req, res) =>
+		{
+			let ccu = 0;
+
+			for (const room in rooms.values()) {
+				ccu += room.getCCU();
+			}
+
+			res.status(200).json({ ccu });
+		});
+
+	/**
 	 * Error handler.
 	 */
 	expressApp.use(
