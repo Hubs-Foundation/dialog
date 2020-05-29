@@ -32,4 +32,5 @@ export HTTPS_CERT_FULLCHAIN={{ pkg.svc_files_path }}/wss.pem
 export AUTH_KEY={{ pkg.svc_files_path }}/perms.pub.pem
 export MEDIASOUP_LISTEN_IP={{ cfg.transports.http.admin_ip }}
 export PROTOO_LISTEN_PORT={{ cfg.transports.websockets.wss_port }}
+export ADMIN_LISTEN_PORT={{ cfg.transports.http.admin_port }}
 exec node {{ pkg.path }}/index.js

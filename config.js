@@ -27,6 +27,13 @@ const config =
 			key  : process.env.HTTPS_CERT_PRIVKEY || `${__dirname}/certs/privkey.pem`
 		}
 	},
+	// TODO remove
+	adminHttps  :
+	{
+		listenIp   : '0.0.0.0',
+		// NOTE: Don't change listenPort (client app assumes 4443).
+		listenPort : process.env.ADMIN_LISTEN_PORT || 4443
+	},
 	// mediasoup settings.
 	mediasoup :
 	{

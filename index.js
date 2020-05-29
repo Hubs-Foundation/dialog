@@ -33,7 +33,9 @@ const queue = new AwaitQueue();
 const rooms = new Map();
 
 let httpsServer;
+let adminHttpsServer;
 let expressApp;
+let expressAdminApp;
 let protooWebSocketServer;
 
 const mediasoupWorkers = [];
@@ -52,6 +54,7 @@ async function run()
 
 	await runMediasoupWorkers();
 	await createExpressApp();
+	await createAdminExpressApp();
 	await runHttpsServer();
 	try {
 		authKey = await readFile(config.authKey, 'utf8');
@@ -321,9 +324,39 @@ async function createExpressApp()
 		});
 
 	/**
+	 * Error handler.
+	 */
+	expressApp.use(
+		(error, req, res, next) =>
+		{
+			if (error)
+			{
+				logger.warn('Express app %s', String(error));
+
+				error.status = error.status || (error.name === 'TypeError' ? 400 : 500);
+
+				res.statusMessage = error.message;
+				res.status(error.status).send(String(error));
+			}
+			else
+			{
+				next();
+			}
+		});
+}
+
+// TODO remove
+async function createAdminExpressApp()
+{
+	logger.info('creating Admin Express app...');
+
+	expressAdminApp = express();
+	expressAdminApp.use(bodyParser.json());
+
+	/**
 	 * Temporary deprecated API to emulate Janus endpoint to get CCU by reticulum.
 	 */
-	expressApp.post(
+	expressAdminApp.post(
 		'/admin', (req, res) =>
 		{
 			const sessions = [];
@@ -337,10 +370,11 @@ async function createExpressApp()
 			res.status(200).json({ sessions });
 		});
 
+
 	/**
 	 * Error handler.
 	 */
-	expressApp.use(
+	expressAdminApp.use(
 		(error, req, res, next) =>
 		{
 			if (error)
@@ -381,6 +415,41 @@ async function runHttpsServer()
 		httpsServer.listen(
 			Number(config.https.listenPort), config.https.listenIp, resolve);
 	});
+
+	// TODO remove, alt server needed to spoof janus API.
+	adminHttpsServer = https.createServer(tls, expressAdminApp);
+
+	await new Promise((resolve) =>
+	{
+		adminHttpsServer.listen(
+			Number(config.adminHttps.listenPort), config.adminHttps.listenIp, resolve);
+	});
+}
+
+/**
+ * Create a Node.js HTTPS server. It listens in the IP and port given in the
+ * configuration file and reuses the Express application as request listener.
+ */
+async function runHttpsServer()
+{
+	logger.info('running an HTTPS server...');
+
+	// HTTPS server for the protoo WebSocket server.
+	const tls =
+	{
+		cert : fs.readFileSync(config.https.tls.cert),
+		key  : fs.readFileSync(config.https.tls.key)
+	};
+
+	httpsServer = https.createServer(tls, expressApp);
+
+	await new Promise((resolve) =>
+	{
+		httpsServer.listen(
+			Number(config.https.listenPort), config.https.listenIp, resolve);
+	});
+
+	// TODO remove, alt server needed to spoof janus API.
 }
 
 /**
