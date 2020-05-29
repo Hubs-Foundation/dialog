@@ -15,6 +15,7 @@ console.log('config.js:\n%s', JSON.stringify(config, null, '  '));
 
 const fs = require('fs');
 const https = require('https');
+const http = require('http');
 const url = require('url');
 const protoo = require('protoo-server');
 const mediasoup = require('mediasoup');
@@ -417,40 +418,17 @@ async function runHttpsServer()
 	});
 
 	// TODO remove, alt server needed to spoof janus API.
-	adminHttpsServer = https.createServer(tls, expressAdminApp);
+	logger.info('running an Admin HTTP server...');
+
+	adminHttpServer = http.createServer(expressAdminApp);
 
 	await new Promise((resolve) =>
 	{
-		adminHttpsServer.listen(
-			Number(config.adminHttps.listenPort), config.adminHttps.listenIp, resolve);
+		adminHttpServer.listen(
+			Number(config.adminHttp.listenPort), config.adminHttp.listenIp, resolve);
 	});
 }
 
-/**
- * Create a Node.js HTTPS server. It listens in the IP and port given in the
- * configuration file and reuses the Express application as request listener.
- */
-async function runHttpsServer()
-{
-	logger.info('running an HTTPS server...');
-
-	// HTTPS server for the protoo WebSocket server.
-	const tls =
-	{
-		cert : fs.readFileSync(config.https.tls.cert),
-		key  : fs.readFileSync(config.https.tls.key)
-	};
-
-	httpsServer = https.createServer(tls, expressApp);
-
-	await new Promise((resolve) =>
-	{
-		httpsServer.listen(
-			Number(config.https.listenPort), config.https.listenIp, resolve);
-	});
-
-	// TODO remove, alt server needed to spoof janus API.
-}
 
 /**
  * Create a protoo WebSocketServer to allow WebSocket connections from browsers.

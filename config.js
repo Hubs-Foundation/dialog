@@ -28,7 +28,7 @@ const config =
 		}
 	},
 	// TODO remove
-	adminHttps  :
+	adminHttp  :
 	{
 		listenIp   : '0.0.0.0',
 		// NOTE: Don't change listenPort (client app assumes 4443).
