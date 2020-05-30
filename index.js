@@ -321,7 +321,8 @@ async function createExpressApp()
 				ccu += room.getCCU();
 			}
 
-			res.status(200).json({ ccu });
+			// TODO remove CORS headers once swithced over
+			res.header("Access-Control-Allow-Origin", ["*"]).status(200).json({ ccu });
 		});
 
 	/**
