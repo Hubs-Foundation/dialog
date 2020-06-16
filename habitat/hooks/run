@@ -21,7 +21,7 @@ if [[ -z "$MEDIASOUP_ANNOUNCED_IP" ]] ; then
   MEDIASOUP_ANNOUNCED_IP=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -n1)
 fi
 
-# Convert legacy der file
+# C onvert legacy der file
 if [[ ! -f "{{ pkg.svc_files_path }}/perms.pub.pem" ]] ; then
   openssl rsa -in {{ pkg.svc_files_path }}/perms.pub.der -inform DER -RSAPublicKey_in -out {{ pkg.svc_files_path }}/perms.pub.pem
 fi
@@ -33,4 +33,19 @@ export AUTH_KEY={{ pkg.svc_files_path }}/perms.pub.pem
 export MEDIASOUP_LISTEN_IP={{ cfg.transports.http.admin_ip }}
 export PROTOO_LISTEN_PORT={{ cfg.transports.websockets.wss_port }}
 export ADMIN_LISTEN_PORT={{ cfg.transports.http.admin_port }}
+
+OLD_PRIVKEY=wss.key.old
+cp $HTTPS_CERT_PRIVKEY $OLD_PRIVKEY
+
+(
+  while true
+  do 
+    if ! diff "$HTTPS_CERT_PRIVKEY" "$OLD_PRIVKEY" >/dev/null 2>&1; then
+      pkill "dialog"
+      break
+    fi
+    sleep 3600
+  done
+)
+
 exec node {{ pkg.path }}/index.js
