@@ -21,7 +21,7 @@ if [[ -z "$MEDIASOUP_ANNOUNCED_IP" ]] ; then
   MEDIASOUP_ANNOUNCED_IP=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -n1)
 fi
 
-# C onvert legacy der file
+# Convert legacy der file
 if [[ ! -f "{{ pkg.svc_files_path }}/perms.pub.pem" ]] ; then
   openssl rsa -in {{ pkg.svc_files_path }}/perms.pub.der -inform DER -RSAPublicKey_in -out {{ pkg.svc_files_path }}/perms.pub.pem
 fi
