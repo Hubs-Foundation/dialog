@@ -34,14 +34,13 @@ export MEDIASOUP_LISTEN_IP={{ cfg.transports.http.admin_ip }}
 export PROTOO_LISTEN_PORT={{ cfg.transports.websockets.wss_port }}
 export ADMIN_LISTEN_PORT={{ cfg.transports.http.admin_port }}
 
-OLD_PRIVKEY=wss.key.old
-cp $HTTPS_CERT_PRIVKEY $OLD_PRIVKEY
-
 (
+  OLD_PRIVKEY=$(<$1)
   while true
   do 
-    if ! diff "$HTTPS_CERT_PRIVKEY" "$OLD_PRIVKEY" >/dev/null 2>&1; then
-      pkill "dialog"
+    if ! diff <(cat $HTTPS_CERT_PRIVKEY) <(echo $OLD_PRIVKEY) >/dev/null 2>&1; then
+      echo "New SSL Cert detected; restarting Dialog process"
+      kill $$
       break
     fi
     sleep 3600
