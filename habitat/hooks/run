@@ -35,7 +35,7 @@ export PROTOO_LISTEN_PORT={{ cfg.transports.websockets.wss_port }}
 export ADMIN_LISTEN_PORT={{ cfg.transports.http.admin_port }}
 
 (
-  OLD_PRIVKEY=$(<$1)
+  OLD_PRIVKEY=$(cat $HTTPS_CERT_PRIVKEY)
   while true
   do 
     if ! diff <(cat $HTTPS_CERT_PRIVKEY) <(echo $OLD_PRIVKEY) >/dev/null 2>&1; then
