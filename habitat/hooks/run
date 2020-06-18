@@ -45,6 +45,6 @@ export ADMIN_LISTEN_PORT={{ cfg.transports.http.admin_port }}
     fi
     sleep 3600
   done
-)
+) &
 
 exec node {{ pkg.path }}/index.js
