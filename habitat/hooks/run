@@ -9,11 +9,11 @@ export MEDIASOUP_MAX_PORT=$(echo "{{ cfg.media.rtp_port_range }}" | cut -d- -f2)
 
 # HACKY - need to inject public IP here. Since not configured in legacy package for janus.
 # AWS
-export MEDIASOUP_ANNOUNCED_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+export MEDIASOUP_ANNOUNCED_IP=$(curl -fs http://169.254.169.254/latest/meta-data/public-ipv4)
 
 # DigitalOcean
 if [[ -z "$MEDIASOUP_ANNOUNCED_IP" ]] ; then
-  export MEDIASOUP_ANNOUNCED_IP=$(curl "http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address")
+  export MEDIASOUP_ANNOUNCED_IP=$(curl -fs "http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address")
 fi
 
 # Fallback to first eth0 ip
