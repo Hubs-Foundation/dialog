@@ -1,7 +1,7 @@
 pkg_name=janus-gateway
 pkg_origin=mozillareality
 pkg_maintainer="Mozilla Mixed Reality <mixreality@mozilla.com>"
-pkg_version="2.0.0"
+pkg_version="2.0.1"
 pkg_description="A simple mediasoup based SFU"
 
 pkg_deps=(
