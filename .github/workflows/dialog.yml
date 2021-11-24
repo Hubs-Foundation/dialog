@@ -51,7 +51,7 @@ jobs:
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
       - name: promote artifact
         run: |
-          fromTag=${{ env.registryName }}/${{ env.containerName }}:${{ github.run_number }}
+          fromTag=${{ env.registryName }}/${{ env.containerName }}:${GITHUB_SHA::7}
           toTag=${{ env.registryName }}/${{ env.containerName }}:${GITHUB_REF/'refs/heads/'/}
           toTag=${toTag//:master/:dev}
           echo "promoting :$fromTag to :$toTag"
