@@ -10,7 +10,7 @@ env:
 
 jobs:
   build:
-    if: github.ref != 'refs/heads/staging' && github.ref != 'refs/heads/prod' && github.ref != 'refs/heads/feature/gha-update'
+    if: github.ref != 'refs/heads/staging' && github.ref != 'refs/heads/prod'
     runs-on: ubuntu-latest
     steps:
       - name: test
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: master branch -- produce commit-sha tagged image
+      - name: "master: produce commit-sha tagged image"
         if: github.ref == 'refs/heads/master'
         run: |
           fromTag=${{ env.registryName }}/${{ env.containerName }}:${{ github.run_number }}
@@ -53,9 +53,13 @@ jobs:
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
       - name: promote artifact
         run: |
-          fromTag=${{ env.registryName }}/${{ env.containerName }}:${GITHUB_SHA::7}
-          toTag=${{ env.registryName }}/${{ env.containerName }}:${GITHUB_REF/'refs/heads/'/}
-          toTag=${toTag//:master/:dev}
+          targetEnv={GITHUB_REF/'refs/heads/'/}          
+          sourceTag=${GITHUB_SHA::7}
+          if [ $targetEnv == 'prod' ]; then sourceTag='staging'; fi
+          fromTag=${{ env.registryName }}/${{ env.containerName }}:$sourceTag          
+          targetTag=$targetEnv
+          if [ $targetEnv == 'master' ]; then targetTag='dev'; fi
+          toTag=${{ env.registryName }}/${{ env.containerName }}:$targetTag
           echo "promoting :$fromTag to :$toTag"
           echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username $registryName --password-stdin
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
