@@ -39,7 +39,7 @@ jobs:
       - name: "master: pull GITHUB_RUN_NUMBER and tag to ${GITHUB_SHA::7} and dev"
         run: |
           fromTag=mozillareality/${{ github.workflow }}:${{ github.run_number }}
-          echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username $registryName --password-stdin
+          echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username mozillareality --password-stdin
           toTag=mozillareality/${{ github.workflow }}:${GITHUB_SHA::7}
           echo "[info] promoting :$fromTag to :$toTag"          
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
@@ -54,7 +54,7 @@ jobs:
       - name: "pull ${GITHUB_SHA::7} and tag to staging"
         run: |
           fromTag=mozillareality/${{ github.workflow }}:${GITHUB_SHA::7}
-          echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username $registryName --password-stdin
+          echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username mozillareality --password-stdin
           toTag=mozillareality/${{ github.workflow }}:staging                    
           echo "[info] promoting :$fromTag to :$toTag"
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
@@ -77,7 +77,7 @@ jobs:
           fromTag=mozillareality/${{ github.workflow }}:${GITHUB_SHA::7}
           toTag=mozillareality/${{ github.workflow }}:prod
           echo "promoting :$fromTag to :$toTag"
-          echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username $registryName --password-stdin
+          echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username mozillareality --password-stdin
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
       - name: checkout codebase for tagging
         uses: actions/checkout@v2
