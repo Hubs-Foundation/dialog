@@ -51,7 +51,7 @@ jobs:
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
   release_staging:
     runs-on: ubuntu-latest
-    needs: promote_master
+    needs: promote
     environment: staging
     steps:
       - name: "pull ${GITHUB_SHA::7} and tag to staging"
@@ -73,7 +73,7 @@ jobs:
   release_prod:
     runs-on: ubuntu-latest
     environment: prod
-    needs: promote_master
+    needs: promote
     steps:
       - name: promote artifact to prod
         run: |
