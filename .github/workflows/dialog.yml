@@ -69,7 +69,7 @@ jobs:
       - name: tag staging commit
         run: |
           cd ./staging
-          tag="staging.$(date '+%y%m%d')"
+          tag="staging.$(date '+%y%m%d').GITHUB_RUN_NUMBER"
           git tag $tag ${GITHUB_SHA::7} && git push origin $tag
   release_prod:
     runs-on: ubuntu-latest
@@ -86,11 +86,11 @@ jobs:
       - name: checkout codebase for tagging
         uses: actions/checkout@v2
         with:
-          path: ./staging
+          path: ./prod
       - name: tag release commit
         run: |
-          cd ./staging
-          tag="prod.$(date '+%y%m%d')"
+          cd ./prod
+          tag="prod.$(date '+%y%m%d').GITHUB_RUN_NUMBER"
           git tag $tag ${GITHUB_SHA::7} && git push origin $tag       
 
 
