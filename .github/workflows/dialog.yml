@@ -1,6 +1,7 @@
 name: dialog
 on:
   push:
+    branches:
     paths-ignore: ["README.md"]
   workflow_dispatch:
 
