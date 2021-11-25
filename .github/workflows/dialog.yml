@@ -10,7 +10,7 @@ env:
 
 jobs:
   build:
-    if: github.ref != 'refs/heads/staging' && github.ref != 'refs/heads/prod'
+    if: github.ref != 'refs/heads/staging'
     runs-on: ubuntu-latest
     steps:
       - name: checkout-dialog
