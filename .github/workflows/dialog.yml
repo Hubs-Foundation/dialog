@@ -78,7 +78,7 @@ jobs:
   prod_post_release:
     if: github.ref == 'refs/heads/staging'
     runs-on: ubuntu-latest
-    needs: promote_staging
+    needs: prod_release
     steps:
       - name: checkout-hubs
         uses: actions/checkout@v2
