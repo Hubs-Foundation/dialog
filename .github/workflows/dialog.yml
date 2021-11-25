@@ -13,8 +13,6 @@ jobs:
     if: github.ref != 'refs/heads/staging' && github.ref != 'refs/heads/prod'
     runs-on: ubuntu-latest
     steps:
-      - name: test
-        run: echo ${{ github.ref }}
       - name: checkout-dialog
         uses: actions/checkout@v2
         with:
