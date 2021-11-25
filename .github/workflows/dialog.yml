@@ -60,7 +60,7 @@ jobs:
           echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username $registryName --password-stdin
           toTag=${{ env.registryName }}/${{ env.containerName }}:staging                    
           echo "[info] promoting :$fromTag to :$toTag"
-          docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $
+          docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
       - name: checkout codebase for tagging
         uses: actions/checkout@v2
         with:
