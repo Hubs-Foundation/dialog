@@ -8,4 +8,9 @@ on:
 jobs:
   turkeyGitops:
     uses: mozilla/hubs-ops/.github/workflows/turkeyGitops.yml@feature/gha-template
-
+    with:
+      inputs:
+        registry: mozillareality
+      dockerfile: Dockerfile
+      secrets:
+        DOCKER_HUB_PWD: ${{ secrets.DOCKER_HUB_PWD }}
