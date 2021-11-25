@@ -5,10 +5,6 @@ on:
     paths-ignore: ["README.md"]
   workflow_dispatch:
 
-env:
-  registryName: mozillareality
-  containerName: dialog
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,16 +20,16 @@ jobs:
       - name: docker login
         uses: docker/login-action@v1
         with:
-          username: ${{ env.registryName }}
+          username: mozillareality
           password: ${{ secrets.DOCKER_HUB_PWD }}
       - name: docker build(x) push
         uses: docker/build-push-action@v2
         with:
           context: dialog/
           file: dialog/Dockerfile
-          tags: ${{ env.registryName }}/${{ env.containerName }}:${{ github.run_number  }}
-          cache-from: type=registry,ref=${{ env.registryName }}/${{ env.containerName }}:buildcache
-          cache-to: type=registry,ref=${{ env.registryName }}/${{ env.containerName }}:buildcache,mode=max
+          tags: mozillareality/${{ github.workflow }}:${{ github.run_number  }}
+          cache-from: type=registry,ref=mozillareality/${{ github.workflow }}:buildcache
+          cache-to: type=registry,ref=mozillareality/${{ github.workflow }}:buildcache,mode=max
           push: true
   promote:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/feature/gha-fixes'
@@ -42,12 +38,12 @@ jobs:
     steps:
       - name: "master: pull GITHUB_RUN_NUMBER and tag to ${GITHUB_SHA::7} and dev"
         run: |
-          fromTag=${{ env.registryName }}/${{ env.containerName }}:${{ github.run_number }}
+          fromTag=mozillareality/${{ github.workflow }}:${{ github.run_number }}
           echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username $registryName --password-stdin
-          toTag=${{ env.registryName }}/${{ env.containerName }}:${GITHUB_SHA::7}
+          toTag=mozillareality/${{ github.workflow }}:${GITHUB_SHA::7}
           echo "[info] promoting :$fromTag to :$toTag"          
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
-          toTag=${{ env.registryName }}/${{ env.containerName }}:dev
+          toTag=mozillareality/${{ github.workflow }}:dev
           echo "[info] promoting :$fromTag to :$toTag"          
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
   release_staging:
@@ -57,9 +53,9 @@ jobs:
     steps:
       - name: "pull ${GITHUB_SHA::7} and tag to staging"
         run: |
-          fromTag=${{ env.registryName }}/${{ env.containerName }}:${GITHUB_SHA::7}
+          fromTag=mozillareality/${{ github.workflow }}:${GITHUB_SHA::7}
           echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username $registryName --password-stdin
-          toTag=${{ env.registryName }}/${{ env.containerName }}:staging                    
+          toTag=mozillareality/${{ github.workflow }}:staging                    
           echo "[info] promoting :$fromTag to :$toTag"
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
       - name: checkout codebase for tagging
@@ -78,8 +74,8 @@ jobs:
     steps:
       - name: promote artifact to prod
         run: |
-          fromTag=${{ env.registryName }}/${{ env.containerName }}:${GITHUB_SHA::7}
-          toTag=${{ env.registryName }}/${{ env.containerName }}:prod
+          fromTag=mozillareality/${{ github.workflow }}:${GITHUB_SHA::7}
+          toTag=mozillareality/${{ github.workflow }}:prod
           echo "promoting :$fromTag to :$toTag"
           echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username $registryName --password-stdin
           docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
