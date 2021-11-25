@@ -66,7 +66,7 @@ jobs:
       - name: promote artifact to prod
       - run: |
         fromTag=${{ env.registryName }}/${{ env.containerName }}:${GITHUB_SHA::7}
-        toTag="${{ env.registryName }}/${{ env.containerName }}:prod"
+        toTag=${{ env.registryName }}/${{ env.containerName }}:prod
         echo "promoting :$fromTag to :$toTag"
         echo ${{ secrets.DOCKER_HUB_PWD }} | sudo docker login --username $registryName --password-stdin
         docker pull $fromTag && docker tag $fromTag $toTag && sudo docker push $toTag
