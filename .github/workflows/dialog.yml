@@ -11,6 +11,6 @@ jobs:
     with:
       inputs:
         registry: mozillareality
-      dockerfile: Dockerfile
+        dockerfile: Dockerfile
       secrets:
         DOCKER_HUB_PWD: ${{ secrets.DOCKER_HUB_PWD }}
