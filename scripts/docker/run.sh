@@ -5,11 +5,10 @@ healthcheck(){
 
 
 healthcheck &
-
-echo -e $(echo -e ${perms_key//\n/n}) > /app/certs/perms.pub.pem \n\            
-head -3 /app/certs/perms.pub.pem \n\            
-export MEDIASOUP_ANNOUNCED_IP=$(curl ${{ env.PUB_IP_CURL }}) \n\
-echo "MEDIASOUP_ANNOUNCED_IP: $MEDIASOUP_ANNOUNCED_IP" \n\
-export INTERACTIVE=nope \n\
+echo -e $(echo -e ${perms_key//\n/n}) > /app/certs/perms.pub.pem        
+head -3 /app/certs/perms.pub.pem
+export MEDIASOUP_ANNOUNCED_IP=$(curl ${{ env.PUB_IP_CURL }})
+echo "MEDIASOUP_ANNOUNCED_IP: $MEDIASOUP_ANNOUNCED_IP"
+export INTERACTIVE=nope
 
 npm start
