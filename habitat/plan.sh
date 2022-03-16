@@ -18,7 +18,6 @@ pkg_build_deps=(
 )
 
 do_build() {
-  npm install mediasoup
   CFLAGS="${CFLAGS} -O2 -g" CPPFLAGS="${CPPFLAGS} -O2 -g" CXXFLAGS="${CXXFLAGS} -O2 -g" npm ci
   patchelf --set-rpath "$(pkg_path_for gcc-libs)/lib" node_modules/mediasoup/worker/out/Release/mediasoup-worker
   pushd node_modules
