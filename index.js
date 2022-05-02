@@ -40,7 +40,7 @@ let expressAdminApp;
 let protooWebSocketServer;
 
 const mediasoupWorkers = [];
-let nextMediasoupWorkerIdx = 0;
+// let nextMediasoupWorkerIdx = 0;
 
 let authKey;
 
@@ -487,15 +487,15 @@ async function runProtooWebSocketServer()
 	});
 }
 
-function getMediasoupWorker()
-{
-	const worker = mediasoupWorkers[nextMediasoupWorkerIdx];
+// function getMediasoupWorker()
+// {
+// 	const worker = mediasoupWorkers[nextMediasoupWorkerIdx];
 
-	if (++nextMediasoupWorkerIdx === mediasoupWorkers.length)
-		nextMediasoupWorkerIdx = 0;
+// 	if (++nextMediasoupWorkerIdx === mediasoupWorkers.length)
+// 		nextMediasoupWorkerIdx = 0;
 
-	return worker;
-}
+// 	return worker;
+// }
 
 async function getOrCreateRoom({ roomId })
 {
@@ -506,9 +506,9 @@ async function getOrCreateRoom({ roomId })
 	{
 		logger.info('creating a new Room [roomId:%s]', roomId);
 
-		const mediasoupWorker = getMediasoupWorker();
+		// const mediasoupWorker = getMediasoupWorker();
 
-		room = await Room.create({ mediasoupWorker, roomId, authKey });
+		room = await Room.create({ mediasoupWorkers, roomId, authKey });
 
 		rooms.set(roomId, room);
 		room.on('close', () => rooms.delete(roomId));
