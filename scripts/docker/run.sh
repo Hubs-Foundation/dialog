@@ -14,4 +14,4 @@ echo "MEDIASOUP_ANNOUNCED_IP: $MEDIASOUP_ANNOUNCED_IP"
 export INTERACTIVE=nope
 
 # npm start
-DEBUG='*WARN* *ERROR*' node index.js
+DEBUG='*INFO* *WARN* *ERROR*' node index.js
