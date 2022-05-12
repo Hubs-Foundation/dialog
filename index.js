@@ -41,6 +41,7 @@ let protooWebSocketServer;
 
 const mediasoupWorkers = [];
 // let nextMediasoupWorkerIdx = 0;
+var workerLoadMap={}
 
 let authKey;
 
@@ -100,6 +101,7 @@ async function runMediasoupWorkers()
 		});
 
 		mediasoupWorkers.push(worker);
+		workerLoadMap.set(worker._pid, 0)
 
 		setInterval(async () =>
 		{
