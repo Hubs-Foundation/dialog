@@ -29,6 +29,8 @@ const interactiveClient = require('./lib/interactiveClient');
 const util = require('util');
 const readFile = util.promisify(fs.readFile);
 
+const utils = require('./lib/utils')
+
 const logger = new Logger();
 const queue = new AwaitQueue();
 const rooms = new Map();
@@ -41,7 +43,6 @@ let protooWebSocketServer;
 
 const mediasoupWorkers = [];
 // let nextMediasoupWorkerIdx = 0;
-var workerLoadMap = new Map()
 
 
 let authKey;
@@ -102,7 +103,7 @@ async function runMediasoupWorkers()
 		});
 
 		mediasoupWorkers.push(worker);
-		workerLoadMap.set(worker._pid, 0)
+		utils.workerLoadMap.set(worker._pid, 0)
 
 		setInterval(async () =>
 		{
