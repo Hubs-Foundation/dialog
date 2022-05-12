@@ -29,7 +29,7 @@ const interactiveClient = require('./lib/interactiveClient');
 const util = require('util');
 const readFile = util.promisify(fs.readFile);
 
-import workerLoadMap from './lib/utils'
+var utils = require('./lib/utils')
 
 const logger = new Logger();
 const queue = new AwaitQueue();
@@ -103,7 +103,7 @@ async function runMediasoupWorkers()
 		});
 
 		mediasoupWorkers.push(worker);
-		workerLoadMap.set(worker._pid, 0)
+		utils.workerLoadMap.set(worker._pid, 0)
 
 		setInterval(async () =>
 		{
