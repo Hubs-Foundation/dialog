@@ -41,7 +41,11 @@ let protooWebSocketServer;
 
 const mediasoupWorkers = [];
 // let nextMediasoupWorkerIdx = 0;
-var workerLoadMap = new Map()
+
+/**
+ * global scoped workerLoadMap
+ */
+global.workerLoadMap = new Map()	
 
 let authKey;
 
