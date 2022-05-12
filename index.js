@@ -330,16 +330,20 @@ async function createExpressApp()
 				ccu += room.getCCU();
 			}
 
-			// TODO remove CORS header once live
-			res.header("Access-Control-Allow-Origin", ["*"]).status(200).json({ ccu });
-		});
-	expressApp.get(
-		'/workerloads', (req, res) =>
-		{
 			const workerLoadMap = utils.workerLoadMap_get()
+			workerLoadMap.set("total_ccu", ccu)
+
 			// TODO remove CORS header once live
+			// res.header("Access-Control-Allow-Origin", ["*"]).status(200).json({ ccu });
 			res.header("Access-Control-Allow-Origin", ["*"]).status(200).json(Object.fromEntries(workerLoadMap));
-		});		
+		});
+	// expressApp.get(
+	// 	'/workerloads', (req, res) =>
+	// 	{
+	// 		const workerLoadMap = utils.workerLoadMap_get()
+	// 		// TODO remove CORS header once live
+	// 		res.header("Access-Control-Allow-Origin", ["*"]).status(200).json(Object.fromEntries(workerLoadMap));
+	// 	});		
 
 	/**
 	 * Error handler.
