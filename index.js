@@ -41,7 +41,7 @@ let protooWebSocketServer;
 
 const mediasoupWorkers = [];
 // let nextMediasoupWorkerIdx = 0;
-
+var workerLoadMap = new Map()
 
 
 let authKey;
@@ -118,9 +118,7 @@ async function createExpressApp()
 	logger.info('creating Express app...');
 
 	expressApp = express();
-	expressApp.use(bodyParser.json());
-
-	var workerLoadMap = new Map()	
+	expressApp.use(bodyParser.json());	
 
 	expressApp.param(
 		'roomId', (req, res, next, roomId) =>
