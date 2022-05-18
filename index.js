@@ -76,7 +76,7 @@ async function run()
 		{
 			room.logStatus();
 		}
-	}, 120000);
+	}, 900000);
 }
 
 async function runMediasoupWorkers()
