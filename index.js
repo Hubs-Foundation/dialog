@@ -331,13 +331,13 @@ async function createExpressApp()
 				ccu += room.getCCU();
 			}
 
-			const workerLoadMap = utils.workerLoadMap_get()
-			workerLoadMap.set("_total_ccu", ccu)
-			workerLoadMap.set("_hostname", os.hostname())
+			const report = new Map(utils.workerLoadMap_get())
+			report.set("_total_ccu", ccu)
+			report.set("_hostname", os.hostname())
 
 			// TODO remove CORS header once live
 			// res.header("Access-Control-Allow-Origin", ["*"]).status(200).json({ ccu });
-			res.header("Access-Control-Allow-Origin", ["*"]).status(200).json(Object.fromEntries(workerLoadMap));
+			res.header("Access-Control-Allow-Origin", ["*"]).status(200).json(Object.fromEntries(report));
 		});
 	// expressApp.get(
 	// 	'/workerloads', (req, res) =>
