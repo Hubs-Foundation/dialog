@@ -331,7 +331,8 @@ async function createExpressApp()
 			}
 
 			const workerLoadMap = utils.workerLoadMap_get()
-			workerLoadMap.set("total_ccu", ccu)
+			workerLoadMap.set("_total_ccu", ccu)
+			workerLoadMap.set("_hostname", os.hostname())
 
 			// TODO remove CORS header once live
 			// res.header("Access-Control-Allow-Origin", ["*"]).status(200).json({ ccu });
