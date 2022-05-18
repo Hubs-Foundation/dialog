@@ -30,6 +30,7 @@ const util = require('util');
 const readFile = util.promisify(fs.readFile);
 
 var utils = require('./lib/utils')
+var os = require("os");
 
 const logger = new Logger();
 const queue = new AwaitQueue();
