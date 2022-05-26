@@ -104,7 +104,7 @@ async function runMediasoupWorkers()
 		});
 
 		mediasoupWorkers.push(worker);
-		utils.workerLoadMap_set(worker._pid, {peerCnt:0, roomReqCnt:0, rooms:{}})
+		utils.workerLoadMap_set(worker._pid, {peerCnt:0, roomReqCnt:0, rooms:new Map()})
 
 		// setInterval(async () =>
 		// {
