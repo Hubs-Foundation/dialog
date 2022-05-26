@@ -104,20 +104,20 @@ async function runMediasoupWorkers()
 		});
 
 		mediasoupWorkers.push(worker);
-		utils.workerLoadMap_set(worker._pid, {peerCnt:0, rooms:{}})
+		utils.workerLoadMap_set(worker._pid, {peerCnt:0, roomReqCnt:0, rooms:{}})
 
-		setInterval(async () =>
-		{
-			const usage = await worker.getResourceUsage();
+		// setInterval(async () =>
+		// {
+		// 	const usage = await worker.getResourceUsage();
 
-			logger.debug('mediasoup Worker resource usage [pid:%d]: %o', worker.pid, usage);
-		}, 120000);
+		// 	logger.debug('mediasoup Worker resource usage [pid:%d]: %o', worker.pid, usage);
+		// }, 120000);
 	}
-	setInterval(async () =>
-	{
-		const workerLoadMap = utils.workerLoadMap_get()
-		logger.info('mediasoup workerLoadMap::', workerLoadMap);
-	}, 120000);
+	// setInterval(async () =>
+	// {
+	// 	const workerLoadMap = utils.workerLoadMap_get()
+	// 	logger.info('mediasoup workerLoadMap::', workerLoadMap);
+	// }, 120000);
 }
 
 async function createExpressApp()
@@ -332,7 +332,7 @@ async function createExpressApp()
 			}
 
 			const report = new Map(utils.workerLoadMap_get())
-			report.set("_total_ccu", ccu)
+			// report.set("_total_ccu", ccu)
 			report.set("_hostname", os.hostname())
 
 			// TODO remove CORS header once live
