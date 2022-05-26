@@ -331,7 +331,7 @@ async function createExpressApp()
 				ccu += room.getCCU();
 			}
 
-			const report = new Map(utils.workerLoadMap_get())
+			const report = utils.workerLoadMap_get()
 			// report.set("_total_ccu", ccu)
 			report.set("_hostname", os.hostname())
 
