@@ -339,7 +339,22 @@ async function createExpressApp()
 
 			// TODO remove CORS header once live
 			// res.header("Access-Control-Allow-Origin", ["*"]).status(200).json({ ccu });
-			res.header("Access-Control-Allow-Origin", ["*"]).status(200).send(report);
+			res.header("Access-Control-Allow-Origin", ["*"]).status(200).send(
+				JSON.stringify(
+					workerLoadMap, 
+					(key,value) => {					
+						if (value instanceof Map) {
+							const reducer = (obj, mapKey) => {
+								obj[mapKey] = value.get(mapKey);
+								return obj;
+							};
+							return [...value.keys()].sort().reduce(reducer, {});
+						} else if (value instanceof Set) {
+							return [...value].sort();
+						}
+						return value;},
+				 	2)
+				);
 		});
 	// expressApp.get(
 	// 	'/workerloads', (req, res) =>
