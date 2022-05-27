@@ -339,7 +339,7 @@ async function createExpressApp()
 
 			// TODO remove CORS header once live
 			// res.header("Access-Control-Allow-Origin", ["*"]).status(200).json({ ccu });
-			res.header("Access-Control-Allow-Origin", ["*"]).status(200).json(Object.fromEntries(report));
+			res.header("Access-Control-Allow-Origin", ["*"]).status(200).json(report);
 		});
 	// expressApp.get(
 	// 	'/workerloads', (req, res) =>
