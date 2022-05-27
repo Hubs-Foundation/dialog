@@ -332,6 +332,8 @@ async function createExpressApp()
 			}
 
 			const report = utils.workerLoadMap_get()
+			logger.info("utils.workerLoadMap_get(): ", utils.workerLoadMap_get())
+
 			// report.set("_total_ccu", ccu)
 			report.set("_hostname", os.hostname())
 
