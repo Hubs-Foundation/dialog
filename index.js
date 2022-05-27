@@ -338,8 +338,13 @@ async function createExpressApp()
 			report.set("_hostname", os.hostname())
 
 			// TODO remove CORS header once live
-			// res.header("Access-Control-Allow-Origin", ["*"]).status(200).json({ ccu });
-			res.header("Access-Control-Allow-Origin", ["*"]).status(200).send(
+			res.set(
+				{
+					'Content-Type': 'application/json', 
+					'Access-Control-Allow-Origin':'*'
+				})
+				.status(200)
+				.send(
 				JSON.stringify(
 					report, 
 					(key,value) => {					
