@@ -341,7 +341,7 @@ async function createExpressApp()
 			// res.header("Access-Control-Allow-Origin", ["*"]).status(200).json({ ccu });
 			res.header("Access-Control-Allow-Origin", ["*"]).status(200).send(
 				JSON.stringify(
-					workerLoadMap, 
+					report, 
 					(key,value) => {					
 						if (value instanceof Map) {
 							const reducer = (obj, mapKey) => {
