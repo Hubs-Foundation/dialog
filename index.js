@@ -323,7 +323,7 @@ async function createExpressApp()
 	 * Meta API to be able to grab current CCU count for load balancing.
 	 */
 	expressApp.get(
-		'/meta', (req, res) =>
+		'/private/meta', (req, res) =>
 		{
 			let ccu = 0;
 
@@ -335,6 +335,11 @@ async function createExpressApp()
 
 			// report.set("_total_ccu", ccu)
 			report.set("_hostname", os.hostname())
+						
+			var totalCapacity = mediasoupWorkers.length * utils.workerCapacity()
+			report.set("_totalCapacity", totalCapacity)
+
+			report.set("_capacity", totalCapacity - utils.sum_roomReq())
 
 			// TODO remove CORS header once live
 			res.set(
