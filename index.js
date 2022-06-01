@@ -325,11 +325,19 @@ async function createExpressApp()
 	expressApp.get(
 		'/private/meta', (req, res) =>
 		{
-			let ccu = 0;
+			res.status(200).json({"_capacity": mediasoupWorkers.length * utils.workerCapacity() - utils.sum_roomReq()});
+		});
+	/**
+	 * Meta API to be able to grab current CCU count for load balancing.
+	 */
+	 expressApp.get(
+		'/private/info', (req, res) =>
+		{
+			// let ccu = 0;
 
-			for (const room in rooms.values()) {
-				ccu += room.getCCU();
-			}
+			// for (const room in rooms.values()) {
+			// 	ccu += room.getCCU();
+			// }
 
 			const report = new Map(utils.workerLoadMap_get())
 
@@ -364,7 +372,7 @@ async function createExpressApp()
 						return value;},
 				 	2)
 				);
-		});
+		});		
 	// expressApp.get(
 	// 	'/workerloads', (req, res) =>
 	// 	{
