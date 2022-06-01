@@ -352,7 +352,7 @@ async function createExpressApp()
 			var totalCapacity = mediasoupWorkers.length * utils.maxPerCoreCCU
 			report.set("_totalCapacity", totalCapacity)
 
-			report.set("_capacity", totalCapacity - utils.sum_roomReq())
+			report.set("_capacity", totalCapacity - utils.workerLoadMan.sum_roomReq())
 
 			// TODO remove CORS header once live
 			res.set(
