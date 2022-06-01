@@ -330,7 +330,10 @@ async function createExpressApp()
 	expressApp.get(
 		'/private/meta', (req, res) =>
 		{
-			res.status(200).json({"_capacity": mediasoupWorkers.length * utils.maxPerCoreCCU - utils.workerLoadMan.sum_roomReq()});
+			res.status(200).json({
+				"cap": mediasoupWorkers.length * utils.maxPerCoreCCU - utils.workerLoadMan.sum_roomReq(),
+				"ip": process.env.MEDIASOUP_ANNOUNCED_IP
+			});
 		});
 	/**
 	 * info API to be able to grab current CCU count for load balancing.
