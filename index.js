@@ -30,6 +30,7 @@ const util = require('util');
 const readFile = util.promisify(fs.readFile);
 
 var utils = require('./lib/utils')
+
 var os = require("os");
 
 const logger = new Logger();
@@ -104,7 +105,7 @@ async function runMediasoupWorkers()
 		});
 
 		mediasoupWorkers.push(worker);
-		utils.workerLoadMap_set(worker._pid, {peerCnt:0, roomReqCnt:0, rooms:new Map()})
+		utils.workerLoadMan.set(worker._pid, {peerCnt:0, roomReqCnt:0, rooms:new Map()})
 
 		// setInterval(async () =>
 		// {
@@ -113,11 +114,6 @@ async function runMediasoupWorkers()
 		// 	logger.debug('mediasoup Worker resource usage [pid:%d]: %o', worker.pid, usage);
 		// }, 120000);
 	}
-	// setInterval(async () =>
-	// {
-	// 	const workerLoadMap = utils.workerLoadMap_get()
-	// 	logger.info('mediasoup workerLoadMap::', workerLoadMap);
-	// }, 120000);
 }
 
 async function createExpressApp()
@@ -320,15 +316,24 @@ async function createExpressApp()
 		});
 
 	/**
-	 * Meta API to be able to grab current CCU count for load balancing.
+	 * meat API for current capacity reporting
+	 */
+	 expressApp.post(
+		'/private/register-room-req', (req, res) =>
+		{
+			req.body.roomId
+			res.status(200).json({"_capacity": mediasoupWorkers.length * utils.maxPerCoreCCU - utils.workerLoadMan.sum_roomReq()});
+		});		
+	/**
+	 * meat API for current capacity reporting
 	 */
 	expressApp.get(
 		'/private/meta', (req, res) =>
 		{
-			res.status(200).json({"_capacity": mediasoupWorkers.length * utils.workerCapacity() - utils.sum_roomReq()});
+			res.status(200).json({"_capacity": mediasoupWorkers.length * utils.maxPerCoreCCU - utils.workerLoadMan.sum_roomReq()});
 		});
 	/**
-	 * Meta API to be able to grab current CCU count for load balancing.
+	 * info API to be able to grab current CCU count for load balancing.
 	 */
 	 expressApp.get(
 		'/private/info', (req, res) =>
@@ -339,12 +344,12 @@ async function createExpressApp()
 			// 	ccu += room.getCCU();
 			// }
 
-			const report = new Map(utils.workerLoadMap_get())
+			const report = new Map(utils.workerLoadMan_get())
 
 			// report.set("_total_ccu", ccu)
 			report.set("_hostname", os.hostname())
 						
-			var totalCapacity = mediasoupWorkers.length * utils.workerCapacity()
+			var totalCapacity = mediasoupWorkers.length * utils.maxPerCoreCCU
 			report.set("_totalCapacity", totalCapacity)
 
 			report.set("_capacity", totalCapacity - utils.sum_roomReq())
@@ -372,14 +377,7 @@ async function createExpressApp()
 						return value;},
 				 	2)
 				);
-		});		
-	// expressApp.get(
-	// 	'/workerloads', (req, res) =>
-	// 	{
-	// 		const workerLoadMap = utils.workerLoadMap_get()
-	// 		// TODO remove CORS header once live
-	// 		res.header("Access-Control-Allow-Origin", ["*"]).status(200).json(Object.fromEntries(workerLoadMap));
-	// 	});		
+		});
 
 	/**
 	 * Error handler.
