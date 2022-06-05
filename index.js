@@ -35,7 +35,7 @@ var os = require("os");
 
 const logger = new Logger();
 const queue = new AwaitQueue();
-const rooms = new Map();
+const rooms = utils.rooms
 
 let httpsServer;
 let adminHttpsServer;
@@ -114,6 +114,13 @@ async function runMediasoupWorkers()
 		// 	logger.debug('mediasoup Worker resource usage [pid:%d]: %o', worker.pid, usage);
 		// }, 120000);
 	}
+	setInterval(async () =>
+	{
+		utils.workerLoadMan.surveyRooms()
+
+		logger.debug('mediasoup Worker resource usage [pid:%d]: %o', worker.pid, usage);
+	}, 30000);
+
 }
 
 async function createExpressApp()
