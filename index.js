@@ -331,6 +331,21 @@ async function createExpressApp()
 				"ip": process.env.MEDIASOUP_ANNOUNCED_IP
 			});
 		});
+
+	expressApp.get(
+		'/private/adm', (req, res) =>
+		{
+			const sessions = [];
+
+			for (const room in rooms.values()) {
+				for (let i = 0; i < room.getCCU(); i++) {
+					sessions.push({});
+				}
+			}
+
+			res.status(200).json({ sessions });
+		});
+
 	/**
 	 * info API to be able to grab current CCU count for load balancing.
 	 */
