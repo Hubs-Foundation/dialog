@@ -513,7 +513,7 @@ async function runProtooWebSocketServer()
 		logger.info(
 			'protoo connection request [roomId:%s, peerId:%s, address:%s, origin:%s]',
 			roomId, peerId, info.socket.remoteAddress, info.origin);
-
+		console.log(request.headers)
 		var max_room_size = info.request.headers["x-ret-max-room-size"]
 		logger.info("roomId: %s, size: %s", roomId, max_room_size)
 
