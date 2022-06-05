@@ -314,16 +314,7 @@ async function createExpressApp()
 				next(error);
 			}
 		});
-
-	/**
-	 * meat API for current capacity reporting
-	 */
-	 expressApp.post(
-		'/private/register-room-req', (req, res) =>
-		{
-			req.body.roomId
-			res.status(200).json({"_capacity": mediasoupWorkers.length * utils.maxPerCoreCCU - utils.workerLoadMan.sum_roomReq()});
-		});		
+	
 	/**
 	 * meat API for current capacity reporting
 	 */
@@ -331,7 +322,8 @@ async function createExpressApp()
 		'/private/meta', (req, res) =>
 		{
 			res.status(200).json({
-				"cap": mediasoupWorkers.length * utils.maxPerCoreCCU - utils.workerLoadMan.sum_roomReq(),
+				// "cap": mediasoupWorkers.length * utils.maxPerCoreCCU - utils.workerLoadMan.sum_roomReq(),
+				"cap": utils.workerLoadMan.sum_roomReq(),
 				"ip": process.env.MEDIASOUP_ANNOUNCED_IP
 			});
 		});
@@ -511,7 +503,6 @@ async function runProtooWebSocketServer()
 		const u = url.parse(info.request.url, true);
 		const roomId = u.query['roomId'];
 		const peerId = u.query['peerId'];
-
 		if (!roomId || !peerId)
 		{
 			reject(400, 'Connection request without roomId and/or peerId');
@@ -522,6 +513,9 @@ async function runProtooWebSocketServer()
 		logger.info(
 			'protoo connection request [roomId:%s, peerId:%s, address:%s, origin:%s]',
 			roomId, peerId, info.socket.remoteAddress, info.origin);
+
+		var max_room_size = info.request.headers["x-ret-max-room-size"]
+		logger.info("roomId: %s, size: %s", roomId, max_room_size)
 
 		// Serialize this code into the queue to avoid that two peers connecting at
 		// the same time with the same roomId create two separate rooms with same
