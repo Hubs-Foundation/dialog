@@ -114,12 +114,9 @@ async function runMediasoupWorkers()
 		// 	logger.debug('mediasoup Worker resource usage [pid:%d]: %o', worker.pid, usage);
 		// }, 120000);
 	}
-	setInterval(async () =>
-	{
-		utils.workerLoadMan.surveyRooms()
 
-		logger.debug('mediasoup Worker resource usage [pid:%d]: %o', worker.pid, usage);
-	}, 30000);
+	utils.workerLoadMan.surveyRooms()
+	setInterval(async () => { utils.workerLoadMan.surveyRooms() }, 30000);
 
 }
 
