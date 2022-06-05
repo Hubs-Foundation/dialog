@@ -513,16 +513,16 @@ async function runProtooWebSocketServer()
 		logger.info(
 			'protoo connection request [roomId:%s, peerId:%s, address:%s, origin:%s]',
 			roomId, peerId, info.socket.remoteAddress, info.origin);
-		console.log(info.request.headers)
-		var max_room_size = info.request.headers["x-ret-max-room-size"]
-		logger.info("roomId: %s, size: %s", roomId, max_room_size)
+		// console.log(info.request.headers)
+		var room_size = info.request.headers["x-ret-room-size"]
+		logger.info("roomId: %s, size: %s", roomId, room_size)
 
 		// Serialize this code into the queue to avoid that two peers connecting at
 		// the same time with the same roomId create two separate rooms with same
 		// roomId.
 		queue.push(async () =>
 		{
-			const room = await getOrCreateRoom({ roomId });
+			const room = await getOrCreateRoom({ roomId, room_size });
 
 			// Accept the protoo WebSocket connection.
 			const protooWebSocketTransport = accept();
@@ -548,7 +548,7 @@ async function runProtooWebSocketServer()
 // 	return worker;
 // }
 
-async function getOrCreateRoom({ roomId })
+async function getOrCreateRoom({ roomId, room_size=0 })
 {
 	let room = rooms.get(roomId);
 
@@ -559,7 +559,7 @@ async function getOrCreateRoom({ roomId })
 
 		// const mediasoupWorker = getMediasoupWorker();
 
-		room = await Room.create({ mediasoupWorkers, roomId, authKey });
+		room = await Room.create({ mediasoupWorkers, roomId, authKey, room_size });
 
 		rooms.set(roomId, room);
 		room.on('close', () => rooms.delete(roomId));
