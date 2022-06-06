@@ -115,8 +115,8 @@ async function runMediasoupWorkers()
 		// }, 120000);
 	}
 
-	utils.workerLoadMan.runSurveyRooms()
-	setInterval(async () => { utils.workerLoadMan.runSurveyRooms() }, 30000);
+	utils.workerLoadMan.runSurvey()
+	setInterval(async () => { utils.workerLoadMan.runSurvey() }, 30000);
 
 }
 
