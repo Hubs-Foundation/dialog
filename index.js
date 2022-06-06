@@ -118,11 +118,10 @@ async function runMediasoupWorkers()
 	utils.workerLoadMan.runSurvey()
 
 	setInterval(async () => { 
-		// var tStart = process.hrtime.bigint();
-		await utils.logTime(utils.workerLoadMan.runSurvey)
-		// logger.info("runSurvey() took: %s ms", (process.hrtime.bigint() - tStart)/1000)
+		var tStart = process.hrtime.bigint();
+		utils.workerLoadMan.runSurvey
+		logger.info("runSurvey() took: %s ms", Number(process.hrtime.bigint() - tStart)/1000000)
 	}, 30000);
-
 }
 
 async function createExpressApp()
