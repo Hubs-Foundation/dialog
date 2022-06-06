@@ -121,7 +121,7 @@ async function runMediasoupWorkers()
 		var tStart = process.hrtime.bigint();
 		utils.workerLoadMan.runSurvey()
 		var took = Number(process.hrtime.bigint() - tStart)/1000000
-		if (took>1) {logger.warn("runSurvey() took: %s ms", took)}
+		if (took>0.1) {logger.warn("runSurvey() took: %s ms", took)}
 	}, 15000);
 }
 
