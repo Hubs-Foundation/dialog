@@ -116,7 +116,12 @@ async function runMediasoupWorkers()
 	}
 
 	utils.workerLoadMan.runSurvey()
-	setInterval(async () => { utils.workerLoadMan.runSurvey() }, 30000);
+
+	setInterval(async () => { 
+		// var tStart = process.hrtime.bigint();
+		await utils.logTime(utils.workerLoadMan.runSurvey)
+		// logger.info("runSurvey() took: %s ms", (process.hrtime.bigint() - tStart)/1000)
+	}, 30000);
 
 }
 
