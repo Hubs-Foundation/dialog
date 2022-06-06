@@ -534,7 +534,7 @@ async function runProtooWebSocketServer()
 			roomId, peerId, info.socket.remoteAddress, info.origin);
 		// console.log(info.request.headers)
 		var room_size = info.request.headers["x-ret-max-room-size"]
-		logger.info("roomId: %s, size: %s", roomId, room_size)
+		logger.info("roomId: %s, x-ret-max-room-size: %s", roomId, room_size)
 
 		// Serialize this code into the queue to avoid that two peers connecting at
 		// the same time with the same roomId create two separate rooms with same
