@@ -376,10 +376,7 @@ async function createExpressApp()
 				})
 				.status(200)
 				.send(
-				JSON.stringify(
-					report, 
-					utils.jsonStringifyReplacer,
-				 	2)
+				JSON.stringify( report,  utils.jsonStringifyReplacer, 2)
 				);
 		});
 
