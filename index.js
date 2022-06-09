@@ -331,7 +331,7 @@ async function createExpressApp()
 		'/private/meta', (req, res) =>
 		{
 			res.status(200).json({
-				// "cap": mediasoupWorkers.length * utils.maxPerCoreCCU - utils.workerLoadMan.sum_roomReq(),
+				// "cap": mediasoupWorkers.length * utils.ccuThreshold - utils.workerLoadMan.sum_roomReq(),
 				"cap": utils.workerLoadMan.sum_roomReq(),
 				"ip": process.env.MEDIASOUP_ANNOUNCED_IP
 			});
@@ -368,7 +368,7 @@ async function createExpressApp()
 			// report.set("_total_ccu", ccu)
 			report.set("_hostname", os.hostname())
 						
-			var totalCapacity = mediasoupWorkers.length * utils.maxPerCoreCCU
+			var totalCapacity = mediasoupWorkers.length * utils.ccuThreshold
 			report.set("_totalCapacity", totalCapacity)
 
 			report.set("_capacity", totalCapacity - utils.workerLoadMan.sum_roomReq())
