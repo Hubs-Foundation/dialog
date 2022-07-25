@@ -44,8 +44,6 @@ let expressAdminApp;
 let protooWebSocketServer;
 
 const mediasoupWorkers = [];
-// let nextMediasoupWorkerIdx = 0;
-
 
 let authKey;
 
@@ -106,13 +104,6 @@ async function runMediasoupWorkers()
 
 		mediasoupWorkers.push(worker);
 		utils.workerLoadMan.set(worker._pid, {peerCnt:0, roomReqCnt:0, rooms:new Map()})
-
-		// setInterval(async () =>
-		// {
-		// 	const usage = await worker.getResourceUsage();
-
-		// 	logger.debug('mediasoup Worker resource usage [pid:%d]: %o', worker.pid, usage);
-		// }, 120000);
 	}
 
 	utils.workerLoadMan.runSurvey()
@@ -130,7 +121,7 @@ async function createExpressApp()
 	logger.info('creating Express app...');
 
 	expressApp = express();
-	expressApp.use(bodyParser.json());	
+	expressApp.use(bodyParser.json());
 
 	expressApp.param(
 		'roomId', (req, res, next, roomId) =>
@@ -323,65 +314,6 @@ async function createExpressApp()
 				next(error);
 			}
 		});
-	
-	/**
-	 * meat API for current capacity reporting
-	 */
-	expressApp.get(
-		'/private/meta', (req, res) =>
-		{
-			res.status(200).json({
-				"cap": utils.workerLoadMan.sum(),
-				"ip": process.env.MEDIASOUP_ANNOUNCED_IP
-			});
-		});
-
-	expressApp.get(
-		'/private/adm', (req, res) =>
-		{
-			const sessions = [];
-
-			for (const room in rooms.values()) {
-				for (let i = 0; i < room.getCCU(); i++) {
-					sessions.push({});
-				}
-			}
-
-			res.status(200).json({ sessions });
-		});
-
-	/**
-	 * info API to be able to grab current CCU count for load balancing.
-	 */
-	 expressApp.get(
-		'/private/info', (req, res) =>
-		{
-			// let ccu = 0;
-
-			// for (const room in rooms.values()) {
-			// 	ccu += room.getCCU();
-			// }
-
-			const report = new Map(utils.workerLoadMan.get())
-
-			// report.set("_total_ccu", ccu)
-			report.set("_hostname", os.hostname())
-						
-
-			report.set("_capacity", utils.workerLoadMan.sum())
-
-			// TODO remove CORS header once live
-			res.set(
-				{
-					'Content-Type': 'application/json', 
-					'Access-Control-Allow-Origin':'*'
-				})
-				.status(200)
-				.send(
-				JSON.stringify( report,  utils.jsonStringifyReplacer, 2)
-				);
-		});
-
 	/**
 	 * Error handler.
 	 */
@@ -404,7 +336,6 @@ async function createExpressApp()
 		});
 }
 
-// TODO remove
 async function createAdminExpressApp()
 {
 	logger.info('creating Admin Express app...');
@@ -428,7 +359,35 @@ async function createAdminExpressApp()
 
 			res.status(200).json({ sessions });
 		});
-
+	/**
+	 * meta API to report current capacity 
+	 */
+	 expressAdminApp.get(
+		'/private/meta', (req, res) =>
+		{
+			res.status(200).json({
+				"cap": utils.workerLoadMan.sum(),
+				// "ip": process.env.MEDIASOUP_ANNOUNCED_IP
+			});
+		});
+	/**
+	 * full report
+	 */
+	 expressAdminApp.get(
+		'/private/info', (req, res) =>
+		{
+			const report = new Map(utils.workerLoadMan.get())
+			report.set("_hostname", os.hostname())
+			report.set("_capacity", utils.workerLoadMan.sum())
+			res.set(
+				{
+					'Content-Type': 'application/json', 
+				})
+				.status(200)
+				.send(
+				JSON.stringify( report,  utils.jsonStringifyReplacer, 2)
+				);
+		});
 
 	/**
 	 * Error handler.
@@ -546,16 +505,6 @@ async function runProtooWebSocketServer()
 	});
 }
 
-// function getMediasoupWorker()
-// {
-// 	const worker = mediasoupWorkers[nextMediasoupWorkerIdx];
-
-// 	if (++nextMediasoupWorkerIdx === mediasoupWorkers.length)
-// 		nextMediasoupWorkerIdx = 0;
-
-// 	return worker;
-// }
-
 async function getOrCreateRoom({ roomId, room_size=0 })
 {
 	let room = rooms.get(roomId);
@@ -564,8 +513,6 @@ async function getOrCreateRoom({ roomId, room_size=0 })
 	if (!room)
 	{
 		logger.info('creating a new Room [roomId:%s]', roomId);
-
-		// const mediasoupWorker = getMediasoupWorker();
 
 		room = await Room.create({ mediasoupWorkers, roomId, authKey, room_size });
 
