@@ -29,9 +29,9 @@ const interactiveClient = require('./lib/interactiveClient');
 const util = require('util');
 const readFile = util.promisify(fs.readFile);
 
-var utils = require('./lib/utils')
+const utils = require('./lib/utils')
 
-var os = require("os");
+const os = require("os");
 
 const logger = new Logger();
 const queue = new AwaitQueue();
@@ -109,9 +109,9 @@ async function runMediasoupWorkers()
 	utils.workerLoadMan.runSurvey()
 
 	setInterval(async () => { 
-		var tStart = process.hrtime.bigint();
+		const tStart = process.hrtime.bigint();
 		utils.workerLoadMan.runSurvey()
-		var took = Number(process.hrtime.bigint() - tStart)/1000000
+		const took = Number(process.hrtime.bigint() - tStart)/1000000
 		if (took>0.1) {logger.warn("runSurvey() took: %s ms", took)}
 	}, 15000);
 }
@@ -481,7 +481,7 @@ async function runProtooWebSocketServer()
 			'protoo connection request [roomId:%s, peerId:%s, address:%s, origin:%s]',
 			roomId, peerId, info.socket.remoteAddress, info.origin);
 		// console.log(info.request.headers)
-		var room_size = info.request.headers["x-ret-max-room-size"]
+		const room_size = info.request.headers["x-ret-max-room-size"]
 		logger.info("roomId: %s, x-ret-max-room-size: %s", roomId, room_size)
 
 		// Serialize this code into the queue to avoid that two peers connecting at
