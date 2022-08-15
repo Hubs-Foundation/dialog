@@ -363,7 +363,7 @@ async function createAdminExpressApp()
 	 * meta API to report current capacity 
 	 */
 	 expressAdminApp.get(
-		'/private/meta', (req, res) =>
+		'/meta', (req, res) =>
 		{
 			res.status(200).json({
 				"cap": utils.workerLoadMan.sum(),
@@ -374,7 +374,7 @@ async function createAdminExpressApp()
 	 * full report
 	 */
 	 expressAdminApp.get(
-		'/private/info', (req, res) =>
+		'/report', (req, res) =>
 		{
 			const report = new Map(utils.workerLoadMan.get())
 			report.set("_hostname", os.hostname())
