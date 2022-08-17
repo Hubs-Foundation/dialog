@@ -367,8 +367,8 @@ async function createAdminExpressApp()
 		'/meta', (req, res) =>
 		{
 			res.status(200).json({
-				'cap': utils.workerLoadMan.sum(),
-				// 'ip': process.env.MEDIASOUP_ANNOUNCED_IP
+				cap: utils.workerLoadMan.sum(),
+				// ip: process.env.MEDIASOUP_ANNOUNCED_IP
 			});
 		});
 
@@ -477,7 +477,6 @@ async function runProtooWebSocketServer()
 		logger.info(
 			'protoo connection request [roomId:%s, peerId:%s, address:%s, origin:%s]',
 			roomId, peerId, info.socket.remoteAddress, info.origin);
-		// console.log(info.request.headers)
 		const roomSize = info.request.headers['x-ret-max-room-size']
 		logger.info('roomId: %s, x-ret-max-room-size: %s', roomId, roomSize)
 
