@@ -29,13 +29,13 @@ const interactiveClient = require('./lib/interactiveClient');
 const util = require('util');
 const readFile = util.promisify(fs.readFile);
 
-const utils = require('./lib/utils')
+const utils = require('./lib/utils');
 
-const os = require("os");
+const os = require('os');
 
 const logger = new Logger();
 const queue = new AwaitQueue();
-const rooms = utils.rooms
+const rooms = utils.rooms;
 
 let httpsServer;
 let adminHttpsServer;
@@ -103,16 +103,16 @@ async function runMediasoupWorkers()
 		});
 
 		mediasoupWorkers.push(worker);
-		utils.workerLoadMan.set(worker._pid, {peerCnt:0, roomReqCnt:0, rooms:new Map()})
+		utils.workerLoadMan.set(worker._pid, { peerCnt: 0, roomReqCnt: 0, rooms: new Map() })
 	}
 
 	utils.workerLoadMan.runSurvey()
 
 	setInterval(async () => { 
-		const tStart = process.hrtime.bigint();
-		utils.workerLoadMan.runSurvey()
-		const took = Number(process.hrtime.bigint() - tStart)/1000000
-		if (took>0.1) {logger.warn("runSurvey() took: %s ms", took)}
+		const startTimestampNs = process.hrtime.bigint();
+		utils.workerLoadMan.runSurvey();
+		const elapsedMs = Number(process.hrtime.bigint() - startTimestampNs) / 1000000;
+		if (elapsedMs > 0.1) { logger.warn('runSurvey() took: %s ms', took); }
 	}, 15000);
 }
 
@@ -359,34 +359,31 @@ async function createAdminExpressApp()
 
 			res.status(200).json({ sessions });
 		});
+
 	/**
 	 * meta API to report current capacity 
 	 */
-	 expressAdminApp.get(
+	expressAdminApp.get(
 		'/meta', (req, res) =>
 		{
 			res.status(200).json({
-				"cap": utils.workerLoadMan.sum(),
-				// "ip": process.env.MEDIASOUP_ANNOUNCED_IP
+				'cap': utils.workerLoadMan.sum(),
+				// 'ip': process.env.MEDIASOUP_ANNOUNCED_IP
 			});
 		});
+
 	/**
 	 * full report
 	 */
-	 expressAdminApp.get(
+	expressAdminApp.get(
 		'/report', (req, res) =>
 		{
 			const report = new Map(utils.workerLoadMan.get())
-			report.set("_hostname", os.hostname())
-			report.set("_capacity", utils.workerLoadMan.sum())
-			res.set(
-				{
-					'Content-Type': 'application/json', 
-				})
+			report.set('_hostname', os.hostname())
+			report.set('_capacity', utils.workerLoadMan.sum())
+			res.set({ 'Content-Type': 'application/json' })
 				.status(200)
-				.send(
-				JSON.stringify( report,  utils.jsonStringifyReplacer, 2)
-				);
+				.send(JSON.stringify(report, utils.stableSortReplacer, 2));
 		});
 
 	/**
@@ -481,15 +478,15 @@ async function runProtooWebSocketServer()
 			'protoo connection request [roomId:%s, peerId:%s, address:%s, origin:%s]',
 			roomId, peerId, info.socket.remoteAddress, info.origin);
 		// console.log(info.request.headers)
-		const room_size = info.request.headers["x-ret-max-room-size"]
-		logger.info("roomId: %s, x-ret-max-room-size: %s", roomId, room_size)
+		const roomSize = info.request.headers['x-ret-max-room-size']
+		logger.info('roomId: %s, x-ret-max-room-size: %s', roomId, roomSize)
 
 		// Serialize this code into the queue to avoid that two peers connecting at
 		// the same time with the same roomId create two separate rooms with same
 		// roomId.
 		queue.push(async () =>
 		{
-			const room = await getOrCreateRoom({ roomId, room_size });
+			const room = await getOrCreateRoom({ roomId, roomSize });
 
 			// Accept the protoo WebSocket connection.
 			const protooWebSocketTransport = accept();
@@ -505,7 +502,7 @@ async function runProtooWebSocketServer()
 	});
 }
 
-async function getOrCreateRoom({ roomId, room_size=0 })
+async function getOrCreateRoom({ roomId, roomSize=0 })
 {
 	let room = rooms.get(roomId);
 
@@ -514,7 +511,7 @@ async function getOrCreateRoom({ roomId, room_size=0 })
 	{
 		logger.info('creating a new Room [roomId:%s]', roomId);
 
-		room = await Room.create({ mediasoupWorkers, roomId, authKey, room_size });
+		room = await Room.create({ mediasoupWorkers, roomId, authKey, roomSize });
 
 		rooms.set(roomId, room);
 		room.on('close', () => rooms.delete(roomId));
