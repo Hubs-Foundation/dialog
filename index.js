@@ -113,7 +113,7 @@ async function runMediasoupWorkers()
 		utils.workerLoadMan.runSurvey();
 		const elapsedMs = Number(process.hrtime.bigint() - startTimestampNs) / 1000000;
 		if (elapsedMs > 0.1) { logger.warn('runSurvey() took: %s ms', elapsedMs); }
-	}, 15000);
+	}, 5000);
 }
 
 async function createExpressApp()
