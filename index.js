@@ -38,7 +38,7 @@ const queue = new AwaitQueue();
 const rooms = utils.rooms;
 
 let httpsServer;
-let adminHttpsServer;
+
 let expressApp;
 let expressAdminApp;
 let protooWebSocketServer;
