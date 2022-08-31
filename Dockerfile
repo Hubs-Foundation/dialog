@@ -1,8 +1,10 @@
 from node:lts as build
 workdir /app
-copy . .
 run mkdir certs && openssl req -x509 -newkey rsa:2048 -sha256 -days 36500 -nodes -keyout certs/privkey.pem -out certs/fullchain.pem -subj '/CN=dialog'
+copy package.json .
+copy package-lock.json .
 run npm ci
+copy . .
 from node:lts-slim
 workdir /app
 copy --from=build /app /app
