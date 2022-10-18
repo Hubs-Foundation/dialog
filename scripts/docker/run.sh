@@ -13,4 +13,5 @@ export MEDIASOUP_ANNOUNCED_IP=$(curl ${PUB_IP_CURL})
 echo "MEDIASOUP_ANNOUNCED_IP: $MEDIASOUP_ANNOUNCED_IP"
 export INTERACTIVE=nope
 
-npm start
+# npm start
+DEBUG='*INFO* *WARN* *ERROR*' node index.js
