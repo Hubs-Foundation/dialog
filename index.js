@@ -210,6 +210,36 @@ async function createAdminExpressApp()
 				.status(200)
 				.send(JSON.stringify(report, utils.stableSortReplacer, 2));
 		});
+		/**
+		 * dump room
+		 */
+		expressAdminApp.get(
+			'/report/rooms/:roomId', (req, res) =>
+			{
+				const report = rooms.get(req.params.roomId);
+				res.set({ 'Content-Type': 'application/json' })
+					.status(200)
+					.send(JSON.stringify(report, utils.stableSortReplacer, 2));
+			});
+			/**
+			 * dump peer
+			 */
+			expressAdminApp.get(
+				'/report/peers/:peerId', (req, res) =>
+				{
+					const peerId = req.params.peerId
+					let room = {}
+					for (const [k,v] of rooms.entries()){
+						if (v._protooRoom.hasPeer(peerId)){
+							room =v
+						}
+					}
+
+					const report = room._protooRoom.getPeer(peerId);
+					res.set({ 'Content-Type': 'application/json' })
+						.status(200)
+						.send(JSON.stringify(report, utils.stableSortReplacer, 2));
+				});
 
 	/**
 	 * Error handler.
