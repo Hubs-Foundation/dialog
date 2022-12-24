@@ -9,6 +9,6 @@ copy . .
 from node:lts-slim
 workdir /app
 copy --from=build /app /app
-run apt-get update && apt-get install -y jq curl dnsutils netcat libnode72
+run apt-get update && apt-get install -y jq curl dnsutils netcat
 copy scripts/docker/run.sh /run.sh
 cmd bash /run.sh
