@@ -220,7 +220,7 @@ async function createAdminExpressApp()
 				console.log(report)
 				res.set({ 'Content-Type': 'application/json' })
 					.status(200)
-					.send(JSON.stringify(report));
+					.send(report.toString());
 			});
 			/**
 			 * dump peer
@@ -240,7 +240,7 @@ async function createAdminExpressApp()
 					console.log(report)
 					res.set({ 'Content-Type': 'application/json' })
 						.status(200)
-						.send(JSON.stringify(report));
+						.send(report.toString());
 				});
 
 	/**
