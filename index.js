@@ -238,7 +238,7 @@ async function createAdminExpressApp()
 
 					const report = room._protooRoom.getPeer(peerId);
 					console.log(report)
-					res.set({ 'Content-Type': 'application/json' })
+					res.set({ 'Content-Type': 'text' })
 						.status(200)
 						.send(report);
 					});
