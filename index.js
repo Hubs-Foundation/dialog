@@ -220,8 +220,8 @@ async function createAdminExpressApp()
 				console.log(report)
 				res.set({ 'Content-Type': 'application/json' })
 					.status(200)
-					.send(JSON.stringify(report));
-			});
+					.send(JSON.stringify(report, utils.stableSortReplacer, 2));
+				});
 			/**
 			 * dump peer
 			 */
@@ -238,12 +238,10 @@ async function createAdminExpressApp()
 
 					const report = room._protooRoom.getPeer(peerId);
 					console.log(report)
-					const reportJson = JSON.stringify(report)
-					console.log("reportJson", reportJson)
 					res.set({ 'Content-Type': 'application/json' })
 						.status(200)
-						.send(JSON.stringify(reportJson));
-				});
+						.send(JSON.stringify(report, utils.stableSortReplacer, 2));
+					});
 
 	/**
 	 * Error handler.
