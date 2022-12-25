@@ -217,9 +217,10 @@ async function createAdminExpressApp()
 			'/report/rooms/:roomId', (req, res) =>
 			{
 				const report = rooms.get(req.params.roomId);
+				console.log(report)
 				res.set({ 'Content-Type': 'application/json' })
 					.status(200)
-					.send(JSON.stringify(report, utils.stableSortReplacer, 2));
+					.send(JSON.stringify(report));
 			});
 			/**
 			 * dump peer
@@ -236,9 +237,10 @@ async function createAdminExpressApp()
 					}
 
 					const report = room._protooRoom.getPeer(peerId);
+					console.log(report)
 					res.set({ 'Content-Type': 'application/json' })
 						.status(200)
-						.send(JSON.stringify(report, utils.stableSortReplacer, 2));
+						.send(JSON.stringify(report));
 				});
 
 	/**
