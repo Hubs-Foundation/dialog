@@ -5,7 +5,7 @@ pkg_version="2.0.1"
 pkg_description="A simple mediasoup based SFU"
 
 pkg_deps=(
-  core/node/12.9.0
+  core/node/18
   mozillareality/gcc-libs
   mozillareality/openssl
 )
