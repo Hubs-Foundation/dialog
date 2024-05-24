@@ -1,5 +1,5 @@
 # dialog
-Mediasoup based WebRTC SFU for Mozilla Hubs.
+Mediasoup based WebRTC SFU for Hubs.
 
 ## Development
 1. Clone repo
