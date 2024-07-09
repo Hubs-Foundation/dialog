@@ -1,6 +1,6 @@
 pkg_name=janus-gateway
-pkg_origin=mozillareality
-pkg_maintainer="Mozilla Mixed Reality <mixreality@mozilla.com>"
+pkg_origin=Hubs-Foundation
+pkg_maintainer="Hubs Foundation <info@hubsfoundation.org>"
 pkg_version="2.0.1"
 pkg_description="A simple mediasoup based SFU"
 
