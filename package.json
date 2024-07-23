@@ -2,7 +2,7 @@
   "name": "dialog",
   "version": "0.0.1",
   "description": "WebRTC SFU based on mediasoup",
-  "author": "Mozilla Mixed Reality <mixreality@mozilla.com>",
+  "author": "Hubs Foundation <info@hubsfoundation.org>",
   "license": "MPL-2.0",
   "main": "index.js",
   "scripts": {
