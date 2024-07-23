@@ -7,7 +7,7 @@ on:
 
 jobs:
   turkeyGitops:
-    uses: Hubs-Foudation/hubs-ops/.github/workflows/turkeyGitops.yml@master
+    uses: Hubs-Foundation/hubs-ops/.github/workflows/turkeyGitops.yml@master
     with:
       registry: Hubs-Foundation
       dockerfile: Dockerfile
