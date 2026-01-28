@@ -1,18 +1,18 @@
 pkg_name=janus-gateway
-pkg_origin=mozillareality
-pkg_maintainer="Mozilla Mixed Reality <mixreality@mozilla.com>"
+pkg_origin=hubsfoundation
+pkg_maintainer="Hubs Foundation <info@hubsfoundation.org>"
 pkg_version="2.0.1"
 pkg_description="A simple mediasoup based SFU"
 
 pkg_deps=(
   core/node/18
-  mozillareality/gcc-libs
-  mozillareality/openssl
+  hubsfoundation/gcc-libs
+  hubsfoundation/openssl
 )
 
 pkg_build_deps=(
   core/git
-  mozillareality/gcc
+  hubsfoundation/gcc
   core/make
   core/patchelf
 )
