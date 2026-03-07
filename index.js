@@ -93,6 +93,7 @@ async function runMediasoupWorkers()
 				rtcMinPort : Number(config.mediasoup.workerSettings.rtcMinPort),
 				rtcMaxPort : Number(config.mediasoup.workerSettings.rtcMaxPort)
 			});
+		worker._pid = i;
 
 		worker.on('died', () =>
 		{
