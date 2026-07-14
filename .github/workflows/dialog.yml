@@ -5,6 +5,8 @@ on:
     paths-ignore: ["README.md"]
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   turkeyGitops:
     uses: Hubs-Foundation/hubs-ops/.github/workflows/turkeyGitops.yml@master
