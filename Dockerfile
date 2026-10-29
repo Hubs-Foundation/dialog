@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-arg NODE_VERSION=18
+arg NODE_VERSION=24
 
 from node:${NODE_VERSION} as build
 workdir /app
